@@ -7,8 +7,8 @@ dotenv.config()
 const ONE_SECOND = 1000
 const provider: ethers.providers.BaseProvider = new ethers.providers.InfuraProvider('homestead', process.env.INFURA_API_KEY)
 
-// const rateReqs = [10, 25, 50]
-const rateReqs = [1]
+const rateReqs = [10, 25, 50]
+// const rateReqs = [1]
 rateReqs.forEach(reqCount => {
     test(`Rate limit test (${reqCount})`, async () => {
         let contractAddress: string = "0xeeDcD34aCd9f87aAE1eB47f06e42868E81ad2924"
@@ -21,7 +21,7 @@ rateReqs.forEach(reqCount => {
         contractABIs.forEach(ABI => {
             expect(ABI.length).toBe(34)
         })
-    }, 200 * ONE_SECOND)
+    }, 100 * ONE_SECOND)
 })
 
 test('getABIs test', async () => {

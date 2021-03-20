@@ -49,7 +49,7 @@ export class AutoABI {
         let contractABIs: Array<ABI> = []
         for (let i = 0; i < contractAddresses.length; i++) {
             contractABIs.push(await AutoABI.getABI(contractAddresses[i]))
-            await new Promise(r => setTimeout(r, 600)) // to avoid potential spam error
+            await new Promise(r => setTimeout(r, 650)) // to avoid potential spam error
         }
         return contractABIs
     }
