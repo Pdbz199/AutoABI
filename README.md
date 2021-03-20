@@ -1,6 +1,6 @@
 # AutoABI
 
-A TypeScript/JavaScript library for finding and loading smart contract ABIs without manually retrieving them.
+A TypeScript/JavaScript library for finding and loading Ethereum mainnet smart contract ABIs without manually retrieving them.
 
 ## Installation
 
