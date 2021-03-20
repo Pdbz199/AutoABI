@@ -14,7 +14,7 @@ npm install autoabi --save
 
 Import
 ```Node.js
-const AutoABI = require('autoabi')
+const { AutoABI } = require('autoabi')
 ```
 
 Get a single contract's ABI
