@@ -100,7 +100,7 @@ var AutoABI = /** @class */ (function () {
                         return [4 /*yield*/, AutoABI.getABI(contractAddresses[i])];
                     case 2:
                         _b.apply(_a, [_c.sent()]);
-                        return [4 /*yield*/, new Promise(function (r) { return setTimeout(r, 600); })]; // to avoid potential spam error
+                        return [4 /*yield*/, new Promise(function (r) { return setTimeout(r, 650); })]; // to avoid potential spam error
                     case 3:
                         _c.sent(); // to avoid potential spam error
                         _c.label = 4;

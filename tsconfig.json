@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-      "outDir": "./lib"
+      "outDir": "."
     },
     "exclude": ["node_modules", "tests"]
 }
