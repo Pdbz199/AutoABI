@@ -4,7 +4,7 @@ A TypeScript/JavaScript library for finding and loading smart contract ABIs with
 
 ## Installation
 
-Use [npm](https://www.npmjs.com/) to install [AutoABI](https://www.npmjs.com/package/AutoABI).
+Use [npm](https://www.npmjs.com/) to install [AutoABI](https://www.npmjs.com/package/autoabi).
 
 ```bash
 npm install autoabi --save
