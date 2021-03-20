@@ -1,7 +1,5 @@
 import axios from 'axios'
 import * as cheerio from 'cheerio'
-import { ContractInterface } from 'ethers'
-import { throws } from 'node:assert'
 
 export class ABI {
     public abiString: string
