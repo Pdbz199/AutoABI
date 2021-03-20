@@ -1,5 +1,5 @@
 {
-  "name": "AutoABI",
+  "name": "autoabi",
   "version": "1.0.1",
   "description": "",
   "main": "index.js",
@@ -7,6 +7,10 @@
     "test": "npx jest tests"
   },
   "author": "Preston Rozwood",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Pdbz199/AutoABI.git"
+  },
   "license": "MIT",
   "dependencies": {
     "@types/jest": "^26.0.21",
