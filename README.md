@@ -1,13 +1,13 @@
-# Strawpoll-lib
+# AutoABI
 
-npm package for the [strawpoll](https://www.strawpoll.me) API
+A TypeScript/JavaScript library for finding and loading smart contract ABIs without manually retrieving them.
 
 ## Installation
 
 Use [npm](https://www.npmjs.com/) to install [AutoABI](https://www.npmjs.com/package/AutoABI).
 
 ```bash
-npm i strawpoll-lib --save
+npm install autoabi --save
 ```
 
 ## Usage
