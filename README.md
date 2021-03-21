@@ -52,5 +52,9 @@ console.log(contractABI.getFunctionInputs('aFunction')) // Prints object of inpu
 console.log(contractABI.getEvents()) // Prints object of all events from ABI
 ```
 
+## Contributing
+
+Please contribute to the project by making it more general or doing whatever you think could help fellow blockchain developers! Make a pull request for any features you might add and I will take a look. Thank you!
+
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
