@@ -38,7 +38,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 exports.AutoABI = exports.ABI = void 0;
 var axios_1 = require("axios");
+var fs = require("fs");
 var cheerio = require("cheerio");
+var jsonfile = require("jsonfile");
+var mkdirp = require("mkdirp");
 var ABI = /** @class */ (function () {
     function ABI(abiString) {
         var _this = this;
@@ -70,22 +73,46 @@ exports.ABI = ABI;
 var AutoABI = /** @class */ (function () {
     function AutoABI() {
     }
-    AutoABI.getABI = function (contractAddress) {
+    AutoABI.downloadABI = function (unparsedABI, contractName, path) {
         return __awaiter(this, void 0, void 0, function () {
-            var response, $, unparsedABI;
+            var updatedPath;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!path)
+                            path = './ABIs/';
+                        updatedPath = (path.endsWith('/') ? path : (path + '/')) + (contractName + ".json");
+                        if (!!fs.existsSync(path)) return [3 /*break*/, 2];
+                        return [4 /*yield*/, mkdirp(path)];
+                    case 1:
+                        _a.sent();
+                        _a.label = 2;
+                    case 2:
+                        jsonfile.writeFileSync(updatedPath, JSON.parse(unparsedABI));
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    AutoABI.getABI = function (contractAddress, download, path) {
+        return __awaiter(this, void 0, void 0, function () {
+            var response, $, contractName, unparsedABI;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, axios_1["default"].get("https://etherscan.io/address/" + contractAddress + "#code")];
                     case 1:
                         response = _a.sent();
                         $ = cheerio.load(response.data);
+                        contractName = $('#ContentPlaceHolder1_contractCodeDiv').find('.h6.font-weight-bold.mb-0').html();
                         unparsedABI = $('#js-copytextarea2').html();
+                        if (download)
+                            this.downloadABI(unparsedABI, contractName, path);
                         return [2 /*return*/, new ABI(unparsedABI)];
                 }
             });
         });
     };
-    AutoABI.getABIs = function (contractAddresses) {
+    AutoABI.getABIs = function (contractAddresses, download, path) {
         return __awaiter(this, void 0, void 0, function () {
             var contractABIs, i, _a, _b;
             return __generator(this, function (_c) {
@@ -97,7 +124,7 @@ var AutoABI = /** @class */ (function () {
                     case 1:
                         if (!(i < contractAddresses.length)) return [3 /*break*/, 5];
                         _b = (_a = contractABIs).push;
-                        return [4 /*yield*/, AutoABI.getABI(contractAddresses[i])];
+                        return [4 /*yield*/, AutoABI.getABI(contractAddresses[i], download, path)];
                     case 2:
                         _b.apply(_a, [_c.sent()]);
                         return [4 /*yield*/, new Promise(function (r) { return setTimeout(r, 650); })]; // to avoid potential spam error
@@ -112,7 +139,7 @@ var AutoABI = /** @class */ (function () {
             });
         });
     };
-    AutoABI.getABIFromAPI = function (contractAddress) {
+    AutoABI.getABIFromAPI = function (contractAddress, download, path, contractName) {
         return __awaiter(this, void 0, void 0, function () {
             var response;
             return __generator(this, function (_a) {
@@ -122,6 +149,8 @@ var AutoABI = /** @class */ (function () {
                         response = _a.sent();
                         if (response.data.status == 0)
                             throw response.data.result;
+                        if (download)
+                            this.downloadABI(response.data.result, contractName, path);
                         return [2 /*return*/, new ABI(response.data.result)];
                 }
             });

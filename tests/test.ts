@@ -1,3 +1,4 @@
+import * as fs from 'fs'
 import * as dotenv from 'dotenv'
 import { AutoABI, ABI } from '../index'
 import { ethers } from 'ethers'
@@ -51,4 +52,15 @@ test('Use ABI test', async () => {
     let signer = new ethers.Wallet(process.env.PRIVATE_KEY, provider)
     contract = new ethers.Contract(contractAddress, contractABI.abiString, signer)
     expect(await contract.name()).toBe('Uniswap V2')
+})
+
+test('Download ABI test', async () => {
+    let contractAddress: string = "0xeeDcD34aCd9f87aAE1eB47f06e42868E81ad2924"
+
+    let contractABI = await AutoABI.getABI(contractAddress, true)
+    expect(fs.existsSync('./ABIs/UniswapV2Pair.json')).toBe(true)
+
+    contractAddress = "0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359"
+    contractABI = await AutoABI.getABI(contractAddress, true, './ABITest/')
+    expect(fs.existsSync('./ABITest/Congress.json')).toBe(true)
 })
