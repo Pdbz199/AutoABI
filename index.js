@@ -42,6 +42,14 @@ var fs = require("fs");
 var cheerio = require("cheerio");
 var jsonfile = require("jsonfile");
 var mkdirp = require("mkdirp");
+var baseURLs = {
+    "eth": function (address) { return "https://etherscan.io/address/" + address + "#code"; },
+    "bsc": function (address) { return "https://bscscan.com/address/" + address + "#code"; }
+};
+var apiURLs = {
+    "eth": function (address) { return "https://api.etherscan.io/api?module=contract&action=getabi&address=" + address; },
+    "bsc": function (address) { return "https://api.bscscan.com/api?module=contract&action=getabi&address=" + address; }
+};
 var ABI = /** @class */ (function () {
     function ABI(abiString) {
         var _this = this;
@@ -94,12 +102,13 @@ var AutoABI = /** @class */ (function () {
             });
         });
     };
-    AutoABI.getABI = function (contractAddress, download, path) {
+    AutoABI.getABI = function (contractAddress, blockchainSource, download, path) {
+        if (blockchainSource === void 0) { blockchainSource = "eth"; }
         return __awaiter(this, void 0, void 0, function () {
             var response, $, contractName, unparsedABI;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, axios_1["default"].get("https://etherscan.io/address/" + contractAddress + "#code")];
+                    case 0: return [4 /*yield*/, axios_1["default"].get(baseURLs[blockchainSource](contractAddress))];
                     case 1:
                         response = _a.sent();
                         $ = cheerio.load(response.data);
@@ -112,7 +121,8 @@ var AutoABI = /** @class */ (function () {
             });
         });
     };
-    AutoABI.getABIs = function (contractAddresses, download, path) {
+    AutoABI.getABIs = function (contractAddresses, blockchainSource, download, path) {
+        if (blockchainSource === void 0) { blockchainSource = "eth"; }
         return __awaiter(this, void 0, void 0, function () {
             var contractABIs, i, _a, _b;
             return __generator(this, function (_c) {
@@ -124,7 +134,7 @@ var AutoABI = /** @class */ (function () {
                     case 1:
                         if (!(i < contractAddresses.length)) return [3 /*break*/, 5];
                         _b = (_a = contractABIs).push;
-                        return [4 /*yield*/, AutoABI.getABI(contractAddresses[i], download, path)];
+                        return [4 /*yield*/, AutoABI.getABI(contractAddresses[i], blockchainSource, download, path)];
                     case 2:
                         _b.apply(_a, [_c.sent()]);
                         return [4 /*yield*/, new Promise(function (r) { return setTimeout(r, 650); })]; // to avoid potential spam error
@@ -139,12 +149,13 @@ var AutoABI = /** @class */ (function () {
             });
         });
     };
-    AutoABI.getABIFromAPI = function (contractAddress, download, path, contractName) {
+    AutoABI.getABIFromAPI = function (contractAddress, blockchainSource, download, path, contractName) {
+        if (blockchainSource === void 0) { blockchainSource = "eth"; }
         return __awaiter(this, void 0, void 0, function () {
             var response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, axios_1["default"].get("https://api.etherscan.io/api?module=contract&action=getabi&address=" + contractAddress)];
+                    case 0: return [4 /*yield*/, axios_1["default"].get(apiURLs[blockchainSource](contractAddress))];
                     case 1:
                         response = _a.sent();
                         if (response.data.status == 0)

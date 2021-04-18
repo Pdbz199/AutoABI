@@ -4,6 +4,16 @@ import * as cheerio from 'cheerio'
 import * as jsonfile from 'jsonfile'
 import * as mkdirp from 'mkdirp'
 
+const baseURLs = {
+    "eth": (address) => `https://etherscan.io/address/${address}#code`,
+    "bsc": (address) => `https://bscscan.com/address/${address}#code`
+}
+
+const apiURLs = {
+    "eth": (address) => `https://api.etherscan.io/api?module=contract&action=getabi&address=${address}`,
+    "bsc": (address) => `https://api.bscscan.com/api?module=contract&action=getabi&address=${address}`
+}
+
 export class ABI {
     public abiString: string
     public abiJSON: Array<any>
@@ -46,8 +56,8 @@ export class AutoABI {
         jsonfile.writeFileSync(updatedPath, JSON.parse(unparsedABI))
     }
 
-    public static async getABI(contractAddress: string, download?: boolean, path?: string): Promise<ABI> {
-        let response = await axios.get(`https://etherscan.io/address/${contractAddress}#code`)
+    public static async getABI(contractAddress: string, blockchainSource="eth", download?: boolean, path?: string): Promise<ABI> {
+        let response = await axios.get(baseURLs[blockchainSource](contractAddress))
         const $ = cheerio.load(response.data)
         let contractName = $('#ContentPlaceHolder1_contractCodeDiv').find('.h6.font-weight-bold.mb-0').html()
         const unparsedABI = $('#js-copytextarea2').html()
@@ -55,17 +65,17 @@ export class AutoABI {
         return new ABI(unparsedABI)
     }
 
-    public static async getABIs(contractAddresses: Array<string>, download?: boolean, path?: string): Promise<Array<ABI>> {
+    public static async getABIs(contractAddresses: Array<string>, blockchainSource="eth", download?: boolean, path?: string): Promise<Array<ABI>> {
         let contractABIs: Array<ABI> = []
         for (let i = 0; i < contractAddresses.length; i++) {
-            contractABIs.push(await AutoABI.getABI(contractAddresses[i], download, path))
+            contractABIs.push(await AutoABI.getABI(contractAddresses[i], blockchainSource, download, path))
             await new Promise(r => setTimeout(r, 650)) // to avoid potential spam error
         }
         return contractABIs
     }
 
-    public static async getABIFromAPI(contractAddress: string, download?: boolean, path?: string, contractName?: string): Promise<ABI> {
-        let response = await axios.get(`https://api.etherscan.io/api?module=contract&action=getabi&address=${contractAddress}`)
+    public static async getABIFromAPI(contractAddress: string, blockchainSource="eth", download?: boolean, path?: string, contractName?: string): Promise<ABI> {
+        let response = await axios.get(apiURLs[blockchainSource](contractAddress))
         if (response.data.status == 0) throw response.data.result
         if (download) this.downloadABI(response.data.result, contractName, path)
         return new ABI(response.data.result)

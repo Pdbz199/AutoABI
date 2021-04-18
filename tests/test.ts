@@ -57,10 +57,17 @@ test('Use ABI test', async () => {
 test('Download ABI test', async () => {
     let contractAddress: string = "0xeeDcD34aCd9f87aAE1eB47f06e42868E81ad2924"
 
-    let contractABI = await AutoABI.getABI(contractAddress, true)
+    let contractABI = await AutoABI.getABI(contractAddress, "eth", true)
     expect(fs.existsSync('./ABIs/UniswapV2Pair.json')).toBe(true)
 
     contractAddress = "0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359"
-    contractABI = await AutoABI.getABI(contractAddress, true, './ABITest/')
+    contractABI = await AutoABI.getABI(contractAddress, "eth", true, './ABITest/')
     expect(fs.existsSync('./ABITest/Congress.json')).toBe(true)
+})
+
+test('Get ABI from BSC', async () => {
+    let contractAddress = "0x05ff2b0db69458a0750badebc4f9e13add608c7f"
+
+    let result = await AutoABI.getABI(contractAddress, "bsc")
+    expect(result).toBeInstanceOf(ABI)
 })
